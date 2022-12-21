@@ -1,3 +1,9 @@
+<?php
+if (!$_SESSION['account']['isAdmin']) {
+    header("Location: index.php?view=admin&action=login");
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,16 +14,16 @@
     <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
     <meta content="Coderthemes" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="<?= base_url('public/admin/images/favicon.ico') ?>">
+    <link rel="shortcut icon" href="<?= $helper->base_url('public/admin/images/favicon.ico') ?>">
 
     <!-- third party css -->
-    <link href="<?= base_url('public/admin/css/jquery-jvectormap-1.2.2.css') ?>" rel="stylesheet" type="text/css" />
+    <link href="<?= $helper->base_url('public/admin/css/jquery-jvectormap-1.2.2.css') ?>" rel="stylesheet" type="text/css" />
     <!-- third party css end -->
 
     <!-- App css -->
-    <link href="<?= base_url('public/admin/css/icons.min.css') ?>" rel="stylesheet" type="text/css" />
-    <link href="<?= base_url('public/admin/css/app-modern.min.css') ?>" rel="stylesheet" type="text/css" id="light-style" />
-    <link href="<?= base_url('public/admin/css/app-modern-dark.min.css') ?>" rel="stylesheet" type="text/css" id="dark-style" />
+    <link href="<?= $helper->base_url('public/admin/css/icons.min.css') ?>" rel="stylesheet" type="text/css" />
+    <link href="<?= $helper->base_url('public/admin/css/app-modern.min.css') ?>" rel="stylesheet" type="text/css" id="light-style" />
+    <link href="<?= $helper->base_url('public/admin/css/app-modern-dark.min.css') ?>" rel="stylesheet" type="text/css" id="dark-style" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -32,10 +38,10 @@
             <!-- LOGO -->
             <a href="index.html" class="topnav-logo">
                 <span class="topnav-logo-lg">
-                    <img src="<?= base_url('public/admin/images/logo-light.png') ?>" alt="" height="16">
+                    <img src="<?= $helper->base_url('public/admin/images/logo-light.png') ?>" alt="" height="16">
                 </span>
                 <span class="topnav-logo-sm">
-                    <img src="<?= base_url('public/admin/images/logo_sm.png') ?>" alt="" height="16">
+                    <img src="<?= $helper->base_url('public/admin/images/logo_sm.png') ?>" alt="" height="16">
                 </span>
             </a>
 
@@ -54,28 +60,28 @@
 
                 <li class="dropdown notification-list topbar-dropdown d-none d-lg-block">
                     <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" id="topbar-languagedrop" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                        <img src="<?= base_url('public/admin/images/flags/us.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">English</span> <i class="mdi mdi-chevron-down"></i>
+                        <img src="<?= $helper->base_url('public/admin/images/flags/us.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">English</span> <i class="mdi mdi-chevron-down"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated topbar-dropdown-menu" aria-labelledby="topbar-languagedrop">
 
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <img src="<?= base_url('public/admin/images/flags/germany.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>
+                            <img src="<?= $helper->base_url('public/admin/images/flags/germany.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">German</span>
                         </a>
 
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <img src="<?= base_url('public/admin/images/flags/italy.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>
+                            <img src="<?= $helper->base_url('public/admin/images/flags/italy.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Italian</span>
                         </a>
 
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <img src="<?= base_url('public/admin/images/flags/spain.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Spanish</span>
+                            <img src="<?= $helper->base_url('public/admin/images/flags/spain.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Spanish</span>
                         </a>
 
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
-                            <img src="<?= base_url('public/admin/images/flags/russia.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
+                            <img src="<?= $helper->base_url('public/admin/images/flags/russia.jpg') ?>" alt="user-image" class="mr-1" height="12"> <span class="align-middle">Russian</span>
                         </a>
 
                     </div>
@@ -123,7 +129,7 @@
                             <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <div class="notify-icon">
-                                    <img src="<?= base_url('public/admin/images/users/avatar-2.jpg') ?>" class="img-fluid rounded-circle" alt="" />
+                                    <img src="<?= $helper->base_url('public/admin/images/users/avatar-2.jpg') ?>" class="img-fluid rounded-circle" alt="" />
                                 </div>
                                 <p class="notify-details">Cristina Pride</p>
                                 <p class="text-muted mb-0 user-msg">
@@ -144,7 +150,7 @@
                             <!-- item-->
                             <a href="javascript:void(0);" class="dropdown-item notify-item">
                                 <div class="notify-icon">
-                                    <img src="<?= base_url('public/admin/images/users/avatar-4.jpg') ?>" class="img-fluid rounded-circle" alt="" />
+                                    <img src="<?= $helper->base_url('public/admin/images/users/avatar-4.jpg') ?>" class="img-fluid rounded-circle" alt="" />
                                 </div>
                                 <p class="notify-details">Karen Robinson</p>
                                 <p class="text-muted mb-0 user-msg">
@@ -182,19 +188,19 @@
                             <div class="row no-gutters">
                                 <div class="col">
                                     <a class="dropdown-icon-item" href="#">
-                                        <img src="<?= base_url('public/admin/images/brands/slack.png') ?>" alt="slack">
+                                        <img src="<?= $helper->base_url('public/admin/images/brands/slack.png') ?>" alt="slack">
                                         <span>Slack</span>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a class="dropdown-icon-item" href="#">
-                                        <img src="<?= base_url('public/admin/images/brands/github.png') ?>" alt="Github">
+                                        <img src="<?= $helper->base_url('public/admin/images/brands/github.png') ?>" alt="Github">
                                         <span>GitHub</span>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a class="dropdown-icon-item" href="#">
-                                        <img src="<?= base_url('public/admin/images/brands/dribbble.png') ?>" alt="dribbble">
+                                        <img src="<?= $helper->base_url('public/admin/images/brands/dribbble.png') ?>" alt="dribbble">
                                         <span>Dribbble</span>
                                     </a>
                                 </div>
@@ -203,19 +209,19 @@
                             <div class="row no-gutters">
                                 <div class="col">
                                     <a class="dropdown-icon-item" href="#">
-                                        <img src="<?= base_url('public/admin/images/brands/bitbucket.png') ?>" alt="bitbucket">
+                                        <img src="<?= $helper->base_url('public/admin/images/brands/bitbucket.png') ?>" alt="bitbucket">
                                         <span>Bitbucket</span>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a class="dropdown-icon-item" href="#">
-                                        <img src="<?= base_url('public/admin/images/brands/dropbox.png') ?>" alt="dropbox">
+                                        <img src="<?= $helper->base_url('public/admin/images/brands/dropbox.png') ?>" alt="dropbox">
                                         <span>Dropbox</span>
                                     </a>
                                 </div>
                                 <div class="col">
                                     <a class="dropdown-icon-item" href="#">
-                                        <img src="<?= base_url('public/admin/images/brands/g-suite.png') ?>" alt="G Suite">
+                                        <img src="<?= $helper->base_url('public/admin/images/brands/g-suite.png') ?>" alt="G Suite">
                                         <span>G Suite</span>
                                     </a>
                                 </div>
@@ -235,7 +241,7 @@
                 <li class="dropdown notification-list">
                     <a class="nav-link dropdown-toggle nav-user arrow-none mr-0" data-toggle="dropdown" id="topbar-userdrop" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                         <span class="account-user-avatar">
-                            <img src="<?= base_url('public/admin/images/users/avatar-1.jpg') ?>" alt="user-image" class="rounded-circle">
+                            <img src="<?= $helper->base_url('public/admin/images/users/avatar-1.jpg') ?>" alt="user-image" class="rounded-circle">
                         </span>
                         <span>
                             <span class="account-user-name">Dominic Keller</span>
@@ -332,7 +338,7 @@
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
                             <div class="media">
-                                <img class="d-flex mr-2 rounded-circle" src="<?= base_url('public/admin/images/users/avatar-2.jpg') ?>" alt="Generic placeholder image" height="32">
+                                <img class="d-flex mr-2 rounded-circle" src="<?= $helper->base_url('public/admin/images/users/avatar-2.jpg') ?>" alt="Generic placeholder image" height="32">
                                 <div class="media-body">
                                     <h5 class="m-0 font-14">Erwin Brown</h5>
                                     <span class="font-12 mb-0">UI Designer</span>
@@ -343,7 +349,7 @@
                         <!-- item-->
                         <a href="javascript:void(0);" class="dropdown-item notify-item">
                             <div class="media">
-                                <img class="d-flex mr-2 rounded-circle" src="<?= base_url('public/admin/images/users/avatar-5.jpg') ?>" alt="Generic placeholder image" height="32">
+                                <img class="d-flex mr-2 rounded-circle" src="<?= $helper->base_url('public/admin/images/users/avatar-5.jpg') ?>" alt="Generic placeholder image" height="32">
                                 <div class="media-body">
                                     <h5 class="m-0 font-14">Jacob Deo</h5>
                                     <span class="font-12 mb-0">Developer</span>
@@ -365,8 +371,8 @@
 
                 <div class="leftbar-user">
                     <a href="javascript: void(0);">
-                        <img src="<?= base_url('public/admin/images/users/avatar-1.jpg') ?>" alt="user-image" height="42" class="rounded-circle shadow-sm">
-                        <span class="leftbar-user-name">Dominic Keller</span>
+                        <img src="<?= $helper->base_url('public/admin/images/users/avatar-1.jpg') ?>" alt="user-image" height="42" class="rounded-circle shadow-sm">
+                        <span class="leftbar-user-name"><?php echo $username ?? '' ?></span>
                     </a>
                 </div>
 
@@ -379,7 +385,7 @@
                         <a href="javascript: void(0);" class="side-nav-link">
                             <i class="uil-home-alt"></i>
                             <span class="badge badge-info badge-pill float-right">4</span>
-                            <span> Dashboards </span>
+                            <span>Dashboards</span>
                         </a>
                         <ul class="side-nav-second-level" aria-expanded="false">
                             <li>

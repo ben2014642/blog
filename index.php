@@ -7,7 +7,9 @@ date_default_timezone_set('Asia/Ho_Chi_Minh');
 // }
 
 
-// $user_id = $_SESSION['account']['id'];
+if (isset($_SESSION['account'])) {
+    $username = $_SESSION['account']['username'];
+}
 require_once(__DIR__.'/libs/db.php');
 require_once(__DIR__.'/libs/helper.php');
 $db = new DB();

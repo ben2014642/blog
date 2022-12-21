@@ -98,7 +98,7 @@ $posts = $db->getList($sql);
             }
             $.ajax({
                 type: "POST",
-                url: "<?=base_url('ajax/process.php')?>",
+                url: "<?=$helper->base_url('ajax/process.php')?>",
                 data: {
                     action: 'deletePost',
                     idPost: id
@@ -128,7 +128,7 @@ $posts = $db->getList($sql);
             // console.log(id);
             $.ajax({
                 type: "POST",
-                url: "<?=base_url('ajax/process.php')?>",
+                url: "<?=$helper->base_url('ajax/process.php')?>",
                 data: {
                     action: 'onPinned',
                     idPost: idPost,

@@ -36,7 +36,7 @@ require_once(__DIR__.'/header.php');
 
                             <div class="mb-3">
                                 <label for="example-textarea" class="form-label">Text area</label>
-                                <textarea class="form-control" name="content" id="editor" rows="10"></textarea>
+                                <textarea class="form-control" name="content" id="create" rows="10"></textarea>
                             </div>
                             <button type="submit" class="btn btn-info">Sign in</button>
                         </form>
@@ -51,10 +51,9 @@ require_once(__DIR__.'/header.php');
 <?php
 require_once(__DIR__.'/footer.php');
 ?>
-<script src="https://cdn.tiny.cloud/1/j7s71fyc3kax1nrnlchfbs12d0rgzpsuwjdnkn43xugf4xgv/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 <script>
     tinymce.init({
-        selector: 'textarea#editor',
+        selector: 'textarea#create',
         height: 500,
         plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
@@ -90,7 +89,7 @@ require_once(__DIR__.'/footer.php');
             event.preventDefault(); // <- avoid reloading
             $.ajax({
                 type: "POST",
-                url: "<?=base_url('ajax/process.php')?>",
+                url: "<?=$helper->base_url('ajax/process.php')?>",
                 data: {
                     action: 'createPost',
                     data: $(this).serialize()

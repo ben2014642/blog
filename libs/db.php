@@ -97,6 +97,19 @@ class DB {
         $data = $this->getOneRowWithSQL($sql);
         return $data;
     }
+
+    public function checkAdmin($username,$password)
+    {
+        $sql = "SELECT * FROM b_user WHERE `username` = '$username' AND `password` = '$password'";
+        $data = $this->getOneRowWithSQL($sql) ?? [];
+        if (count($data) >= 1) {
+            if ($data['admin'] == 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 
