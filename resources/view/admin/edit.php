@@ -3,7 +3,7 @@ require_once(__DIR__ . '/header.php');
 if (isset($_GET['id'])) {
     $idPost = $_GET['id'];
     // $sql = "SELECT * FROM b_post WHERE id= $idPost";
-    $data = $db->getOneRow('b_post',$idPost);
+    $data = $db->getOneRow('b_post', $idPost);
 }
 ?>
 <div class="content-page">
@@ -31,7 +31,13 @@ if (isset($_GET['id'])) {
 
                         <div class="mb-3">
                             <label for="tags" class="form-label">Tags:</label>
-                            <input type="text" id="tags" value="<?= $data['tags'] ?>" name="tags" class="form-control" placeholder="Các thẻ...">
+                            <select type="text" id="tags" name="tags" class="form-control" >
+                                <!-- <option value="1">123</option> -->
+                                <!-- <option selected value="2">234</option>
+                                <option selected value="2">234</option>
+                                <option selected value="2">234</option>
+                                <option selected value="2">234</option> -->
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="tags" class="form-label">Thời gian tạo:</label>
@@ -95,17 +101,17 @@ require_once(__DIR__ . '/footer.php');
             event.preventDefault(); // <- avoid reloading
             $.ajax({
                 type: "POST",
-                url: "<?=$helper->base_url('ajax/HandleEditPost.php')?>",
+                url: "<?= $helper->base_url('ajax/HandleEditPost.php') ?>",
                 data: $(this).serialize(),
                 dataType: "json",
                 success: function(response) {
                     console.log(response);
                     if (response.status == 'success') {
-                        toastr.success(response.msg,'success!');
+                        toastr.success(response.msg, 'success!');
                     } else {
                         alert("Đã xảy ra lỗi !!!");
                     }
-                    // window.location.reload();
+                    window.location.reload();
                 },
                 error: function(error) {
                     console.log(error);
@@ -113,5 +119,34 @@ require_once(__DIR__ . '/footer.php');
             });
 
         });
+        $('#tags').select2({
+            tags: true,
+            multiple: true,
+            ajax: {
+                url: "<?= $helper->base_url('ajax/getTags.php') ?>",
+                data: function(params) {
+                    var queryParam = {
+                        q: params.term
+                    }
+
+                    return queryParam;
+                },
+                dataType: "json",
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.title,
+                                id: item.id
+                            }
+                        })
+                    }
+                }
+
+            }
+        });
+        
     });
+
 </script>

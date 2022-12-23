@@ -1,8 +1,12 @@
 <?php
-if (isset($_GET['id'])) {
-    $post_id = $_GET['id'];
-    $sql = "SELECT * FROM b_post WHERE id = $post_id";
-    $data = $db->getOneRow('b_post', $post_id);
+$body = [
+    'title' => 'Xem Bài Viết'
+];
+if (isset($_GET['slug'])) {
+    $slug = $_GET['slug'];
+    $sql = "SELECT * FROM b_post WHERE slug = '$slug'";
+    $data = $db->getOneRowWithSQL($sql);
+    $post_id = $data['id'];
     $categories = $helper->getListCategoriesByPost($post_id);
     $categories = $helper->convertCategoriesToString($categories);
     $sql = "SELECT * FROM b_comment cmt JOIN b_user u ON cmt.user_id = u.id WHERE cmt.post_id = $post_id";
@@ -175,7 +179,7 @@ if (isset($_GET['id'])) {
         </div>
     </section>
 
-    <section class="py-5">
+    <!-- <section class="py-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -223,7 +227,7 @@ if (isset($_GET['id'])) {
         </div>
 
 
-    </section>
+    </section> -->
     <!-- END section -->
     <?php
     require_once(__DIR__ . '/footer.php');

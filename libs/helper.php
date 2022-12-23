@@ -41,17 +41,33 @@ class Helper
         return $html;
     }
 
-    public function getAuthor($author_id)
-    {
-
-    }
-
     public function getRandomRow($table,$limit = 3)
     {
         $sql = "SELECT * FROM $table 
                 ORDER BY RAND()
                 LIMIT $limit";
+        // return $sql;
         return $this->db->getList($sql);
     }
+    public function getRowLatest($table)
+    {
+        $sql = "SELECT * FROM $table ORDER BY id DESC";
+        $data = $this->db->getOneRowWithSQL($sql);
 
+        return $data;
+    }
+
+    public function getAuthor()
+    {
+        $sql = "SELECT * FROM b_author";
+        $data = $this->db->getOneRowWithSQL($sql);
+
+        return $data;
+    }
+
+    public function getTagsById($id)
+    {
+        $sql = "SELECT * FROM b_tag_of_post WHERE post_id = $id";
+        return $this->db->getList($sql);
+    }
 }

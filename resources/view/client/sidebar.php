@@ -1,14 +1,17 @@
 <?php
 $categories = $helper->getListCategoriesUsed();
+$randomPosts = $helper->getRandomRow('b_post', 3);
+$author = $db->getOneRowFromTable('b_author');
 
-
+// print_r($randomPosts);
+// die();
 ?>
 <div class="col-md-12 col-lg-4 sidebar">
     <div class="sidebar-box search-form-wrap">
-        <form action="#" class="search-form">
+        <form action="#" class="search-form" method="POST">
             <div class="form-group">
                 <span class="icon fa fa-search"></span>
-                <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
+                <input type="text" class="form-control" id="keyword" name="key" placeholder="Type a keyword and hit enter">
             </div>
         </form>
     </div>
@@ -17,14 +20,14 @@ $categories = $helper->getListCategoriesUsed();
         <div class="bio text-center">
             <img src="<?= $helper->base_url('public/images/person_1.jpg') ?>" alt="Image Placeholder" class="img-fluid">
             <div class="bio-body">
-                <h2>David Craig</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem facilis sunt repellendus excepturi beatae porro debitis voluptate nulla quo veniam fuga sit molestias minus.</p>
+                <h2><?=$author['name']?></h2>
+                <p><?=$author['content']?>/p>
                 <p><a href="#" class="btn btn-primary btn-sm rounded">Read my bio</a></p>
                 <p class="social">
-                    <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
-                    <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
-                    <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
-                    <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                    <a href="<?=$author['facebook']?>" class="p-2"><span class="fa fa-facebook"></span></a>
+                    <a href="<?=$author['twitter']?>" class="p-2"><span class="fa fa-twitter"></span></a>
+                    <a href="<?=$author['instagram']?>" class="p-2"><span class="fa fa-instagram"></span></a>
+                    <a href="<?=$author['youtube']?>" class="p-2"><span class="fa fa-youtube-play"></span></a>
                 </p>
             </div>
         </div>

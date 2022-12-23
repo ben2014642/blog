@@ -1,10 +1,12 @@
 <?php
 require_once("../libs/db.php");
+require_once("../libs/helper.php");
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $action = $_POST['action'];
     $db = new DB();
+    $helper = new Helper();
     switch ($action) {
         case 'onPinned':
             $idPost = $_POST['idPost'];
@@ -20,21 +22,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             break;
         case 'createPost':
-            $data = json_decode($_POST['data'],1);
-            $title = trim($data['title']);
-            $tags = trim($data['tags']);
-            $status = trim($data['status']);
-            $content = trim($data['content']);
+            $title = trim($_POST['title']);
+            $tags = trim($_POST['tags']);
+            $status = trim($_POST['status']);
+            $content = $_POST['content'];
             $created = $updated = date("Y-m-d H:i:s");
-
-            $sql = "INSERT INTO b_post (title,content,tags,status,created_time,updated_time,author_id) VALUES('$title','$content','$tags',$status,'$created','$updated',1)";
-
+            $arrTags = explode(",", $_POST['tags']);
+            $slug = create_slug($title);
+            $sql = "INSERT INTO b_post (title,content,tags,status,created_time,updated_time,author_id,hot,slug) VALUES('$title','$content','$tags',$status,'$created','$updated',1,0,'$slug')";
+            // print_r($_POST);
             // echo $sql;
+            // echo $sql;
+            // die();
             $db->handleSQL($sql);
+            $get_row_latest_post = $helper->getRowLatest('b_post');
+            $id_latest = $get_row_latest_post['id'];
+            foreach ($arrTags as $item) {
+                if ($item != '') {
+                    $sql = "INSERT INTO b_tag_of_post VALUE(null,'$item',$id_latest)";
+                    $db->handleSQL($sql);
+                }
+            }
             die(json_encode([
                 'status' => 'success',
                 'msg' => 'Tạo bài viết thành công !'
             ]));
+            break;
         case 'deletePost':
             $idpost = $_POST['idPost'];
             $sql = "DELETE FROM b_post WHERE id=$idpost";
@@ -59,4 +72,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             # code...
             break;
     }
+}
+
+
+/**
+ * Chuyển đổi chuỗi kí tự thành dạng slug dùng cho việc tạo friendly url.
+ * @access    public
+ * @param string
+ * @return    string
+ */
+function create_slug($string)
+{
+    $search = array(
+        '#(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)#',
+        '#(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)#',
+        '#(ì|í|ị|ỉ|ĩ)#',
+        '#(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)#',
+        '#(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)#',
+        '#(ỳ|ý|ỵ|ỷ|ỹ)#',
+        '#(đ)#',
+        '#(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)#',
+        '#(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)#',
+        '#(Ì|Í|Ị|Ỉ|Ĩ)#',
+        '#(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)#',
+        '#(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)#',
+        '#(Ỳ|Ý|Ỵ|Ỷ|Ỹ)#',
+        '#(Đ)#',
+        "/[^a-zA-Z0-9\-\_]/",
+    );
+    $replace = array(
+        'a',
+        'e',
+        'i',
+        'o',
+        'u',
+        'y',
+        'd',
+        'A',
+        'E',
+        'I',
+        'O',
+        'U',
+        'Y',
+        'D',
+        '-',
+    );
+    $string = preg_replace($search, $replace, $string);
+    $string = preg_replace('/(-)+/', '-', $string);
+    $string = strtolower($string);
+    return $string;
 }

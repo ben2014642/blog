@@ -1,56 +1,89 @@
 <?php
-require_once(__DIR__.'/header.php');
+require_once(__DIR__ . '/header.php');
 ?>
-    <div class="content-page">
-        <div class="content">
+<div class="content-page">
+    <div class="content">
 
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
-                                <li class="breadcrumb-item active">Starter</li>
-                            </ol>
-                        </div>
-                        <h4 class="page-title">Bài Viết Blog</h4>
-                        <form action="process.php" id="form-submit" name="form-create-post" method="POST">
-                            <div class="mb-3">
-                                <label for="title" class="form-label">Chủ đề:</label>
-                                <input type="text" id="title" name="title" class="form-control">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="tags" class="form-label">Tags:</label>
-                                <input type="text" id="tags" name="tags" class="form-control" placeholder="Các thẻ...">
-                            </div>
-                            <div class="mb-3">
-                                <label for="customRadiocolor1" class="form-label">Công khai</label>
-                                <input type="radio" id="customRadiocolor1" name="status" value="1" class="" checked>
-                                <label for="customRadiocolor2" class="form-label">Nháp</label>
-                                <input type="radio" id="customRadiocolor2" name="status" value="2" class="">
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label for="example-textarea" class="form-label">Text area</label>
-                                <textarea class="form-control" name="content" id="create" rows="10"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-info">Sign in</button>
-                        </form>
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                            <li class="breadcrumb-item active">Starter</li>
+                        </ol>
                     </div>
+                    <h4 class="page-title">Bài Viết Blog</h4>
+                    <form action="#" method="POST" id="form-create-post">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Chủ đề:</label>
+                            <input type="text" id="title" name="title" class="form-control">
+                            <input type="text" id="title" name="action" value="createPost" hidden class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tags" class="form-label">Tags:</label>
+                            <select name="tags" class="form-control" id="tags"></select>
+                            <!-- <input type="text" id="tags" name="tags" class="form-control" placeholder="Các thẻ..."> -->
+                        </div>
+                        <div class="mb-3">
+                            <label for="customRadiocolor1" class="form-label">Công khai</label>
+                            <input type="radio" id="customRadiocolor1" name="status" value="1" class="" checked>
+                            <label for="customRadiocolor2" class="form-label">Nháp</label>
+                            <input type="radio" id="customRadiocolor2" name="status" value="2" class="">
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="example-textarea" class="form-label">Text area</label>
+                            <textarea class="form-control" name="content" id="create" rows="10"></textarea>
+                        </div>
+                        <button class="btn btn-info">Tạo Bài Viết</button>
                 </div>
             </div>
-            <!-- end page title -->
+        </div>
+    </div>
+    <!-- end page title -->
 
-        </div> <!-- End Content -->
+</div> <!-- End Content -->
 
 
 <?php
-require_once(__DIR__.'/footer.php');
+require_once(__DIR__ . '/footer.php');
 ?>
+<script>
+    $(document).ready(function() {
+        $('#tags').select2({
+            tags: true,
+            multiple: true,
+            ajax: {
+                url: "<?= $helper->base_url('ajax/getTags.php') ?>",
+                data: function(params) {
+                    var queryParam = {
+                        q: params.term
+                    }
+
+                    return queryParam;
+                },
+                dataType: "json",
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.title,
+                                id: item.id
+                            }
+                        })
+                    }
+                }
+
+            }
+        });
+    });
+</script>
 <script>
     tinymce.init({
         selector: 'textarea#create',
@@ -84,47 +117,34 @@ require_once(__DIR__.'/footer.php');
         });
 </script> -->
 <script>
-    $(document).ready(function() {
-        $('#form-submit').submit(function(event) {
-            event.preventDefault(); // <- avoid reloading
-            $.ajax({
-                type: "POST",
-                url: "<?=$helper->base_url('ajax/process.php')?>",
-                data: {
-                    action: 'createPost',
-                    data: $(this).serialize()
-                },
-                dataType: "text",
-                success: function(response) {
-                    console.log(response);
-                    if (response == 'success') {
-                        alert("Tạo thành công !!!");
-                    } else {
-                        alert("Đã xảy ra lỗi !!!");
-                    }
-                    // window.location.reload();
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-
+    $("#form-create-post").submit(function(e) {
+        e.preventDefault();
+        var tags = $('#tags').select2('data');
+        let a = '';
+        tags.forEach(tag => {
+            a += tag.text + ",";
         });
-    });
-
-    function createPost() {
-        var form = $("form-submit");
-        var formData = new FormData(form);
+        // console.log(a);
+        // return;
         $.ajax({
-            type: "method",
-            url: "url",
-            data: "data",
-            dataType: "dataType",
+            type: "POST",
+            url: "<?= $helper->base_url('ajax/process.php') ?>",
+            data: $(this).serialize() + "&action=createPost&tags=" + a,
+            dataType: "json",
             success: function(response) {
-
+                console.log(response);
+                if (response.status == 'success') {
+                    alert("Tạo thành công !!!");
+                } else {
+                    alert("Đã xảy ra lỗi !!!");
+                }
+                window.location.reload();
+            },
+            error: function(error) {
+                console.log(error);
             }
         });
-    }
+    })
 </script>
 
 </html>

@@ -83,7 +83,7 @@
                 if (response.status == 'success') {
                     alert("Đăng nhập thành công !");
                     setTimeout(() => {
-                        window.location.href = "/index.php?view=admin"
+                        window.location.href = "/admin"
                     }, 1500);
                 }
             }

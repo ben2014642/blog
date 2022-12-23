@@ -13,7 +13,7 @@ $posts = $db->getList($sql);
                 <div class="page-title-box">
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="create.php">Create</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/create">Create</a></li>
                             <!-- <li class="breadcrumb-item"><a href="">Pages</a></li> -->
                             <li class="breadcrumb-item active">Starter</li>
                         </ol>
@@ -46,7 +46,7 @@ $posts = $db->getList($sql);
                                         </div>
                                             </td>
                                             <td>
-                                                <a class="btnEditPost" href="view.php?id=' . $post['id'] . '">
+                                                <a class="btnEditPost" href="/admin/edit/' . $post['id'] . '">
                                                     <i class="fa-regular fa-pen-to-square"></i>
                                                 </a>
                                                 <a class="btnDeletePost" data-idPost=' . $post['id'] . '>

@@ -117,3 +117,12 @@
 </body>
 
 </html>
+
+<script>
+    $(".search-form").submit(function (e) {
+        e.preventDefault();
+        let key = $("#keyword").val();
+        key = key.replace(' ', '-');
+        window.location.href = "/search/"+key;
+    })
+</script>

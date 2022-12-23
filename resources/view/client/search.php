@@ -1,14 +1,12 @@
 <?php
 $body = [
-    'title' => 'Blog IT - Trang Chủ'
+    'title' => 'Tìm Kiếm Bài Viết'
 ];
-// $sql = "UPDATE b_user SET username = '1111'";
-// $sql = "SELECT * FROM b_post";
-// $blogs = $db->getList($sql);
+$keyword = $_POST['key'] ?? '';
 
 
 // Xử lý phân trang
-$sql = "SELECT COUNT(*) as total FROM b_post";
+$sql = "SELECT COUNT(*) as total FROM b_post WHERE `slug` LIKE '%$keyword%'";
 $total_row = $db->getCountRow($sql);
 $limit = 5;
 $current_page = $_GET['page'] ?? 1;
@@ -19,7 +17,7 @@ if ($current_page > $total_page) {
     $current_page = 1;
 }
 $start = ($current_page - 1) * $limit;
-$sql = "SELECT * FROM b_post LIMIT $start,$limit";
+$sql = "SELECT * FROM b_post WHERE `slug` LIKE '%$keyword%' LIMIT $start,$limit";
 $blogs = $db->getList($sql);
 
 
@@ -43,7 +41,7 @@ require_once(__DIR__ . '/hot_topic.php');
                     <?php
                     foreach ($blogs as $blog) {
                         echo '<div class="col-md-6">
-                  <a href="/blog/'. $blog['slug'] . '" class="blog-entry element-animate" data-animate-effect="fadeIn">
+                  <a href="/blog/' . $blog['slug'] . '" class="blog-entry element-animate" data-animate-effect="fadeIn">
                     <img src="' . $blog['image'] . '" alt="Image placeholder">
                     <div class="blog-content-body">
                       <div class="post-meta">
@@ -114,4 +112,3 @@ require_once(__DIR__ . '/hot_topic.php');
 <!-- START FOOTER -->
 <?php require_once(__DIR__ . '/footer.php'); ?>
 <!-- END footer -->
-

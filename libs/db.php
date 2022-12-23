@@ -24,7 +24,6 @@ class DB {
     {
         // $this->connect();
         mysqli_query($this->conn,$sql);
-        mysqli_close($this->conn);
     }
 
     public function getList($sql)
@@ -46,9 +45,17 @@ class DB {
         $query = mysqli_query($this->conn,$sql);
         $data = mysqli_fetch_assoc($query);
         return $data;
-        mysqli_close($this->conn);
     }
 
+    public function getOneRowFromTable($table)
+    {
+        // $this->connect();
+        $sql = "SELECT * FROM $table";
+        $query = mysqli_query($this->conn,$sql);
+        $data = mysqli_fetch_assoc($query);
+        return $data;
+    }
+    
     public function checkLogin($username,$password)
     {
         // $this->connect();
@@ -69,7 +76,6 @@ class DB {
         // $this->connect();
         $query = mysqli_query($this->conn,$sql);
         $data = mysqli_fetch_assoc($query);
-        mysqli_close($this->conn);
         return $data;
     }
 
@@ -111,6 +117,3 @@ class DB {
         return false;
     }
 }
-
-
-?>
