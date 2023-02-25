@@ -65,9 +65,15 @@ class Helper
         return $data;
     }
 
-    public function getTagsById($id)
+    public function getTagsByIdPost($id)
     {
-        $sql = "SELECT * FROM b_tag_of_post WHERE post_id = $id";
+        $sql = "SELECT * FROM b_tag_of_post a JOIN b_tags b ON a.tag_id = b.id_tag WHERE a.post_id = $id";
+        return $this->db->getList($sql);
+    }
+
+    public function getCategorysByIdPost($id)
+    {
+        $sql = "SELECT * FROM b_cate_of_post a JOIN b_categories b ON a.category_id = b.id_cate WHERE a.post_id = $id";
         return $this->db->getList($sql);
     }
 }

@@ -6,11 +6,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $idPost = $_POST['idPost'];
     $title = trim($_POST['title']);
     $tags = trim($_POST['tags']);
+    $arrTags = explode(",", $tags);
+    $thumbnail = trim($_POST['thumbnail']);
+    $category = trim($_POST['category']);
+
     $status = trim($_POST['status']);
     $content = trim($_POST['content']);
     $updated = date("Y-m-d H:i:s");
     $slug = create_slug($title);
-    $sql = "UPDATE b_post SET `title` = '$title', `content` = '$content', `tags` = '$tags', `status` = $status, `updated_time` = '$updated',`slug` = '$slug' WHERE id = $idPost";
+    $sql = "UPDATE b_post SET `title` = '$title', `content` = '$content', `tags` = '$tags', `status` = $status, `updated_time` = '$updated',`slug` = '$slug', `thumbnail` = '$thumbnail' WHERE id = $idPost";
+    // $arrTags = array_pop($arrTags);
+    unset($arrTags[count($arrTags) - 1]);
+    $db->handleSQL($sql);
+    $sql = "DELETE FROM b_tag_of_post WHERE post_id = $idPost ";
+    $db->handleSQL($sql);
+    $sql = "DELETE FROM b_cate_of_post WHERE post_id = $idPost ";
+    $db->handleSQL($sql);
+    insertTag($arrTags, $idPost);
+    if (!checkExitsCate($category)) {
+        $sql = "INSERT INTO b_categories VALUES(null,'$category')";
+        $db->handleSQL($sql);
+    }
+    $get_category = $db->getOneRowWithSQL("SELECT * FROM b_categories WHERE title = '$category'"); //lấy dòng vừa mới insert
+    $cate_id = $get_category['id_cate']; //lấy id vừa mới insert
+    $sql = "INSERT INTO b_cate_of_post VALUE(null,$cate_id,$idPost)";
     $db->handleSQL($sql);
     // echo $sql;
     die(json_encode([
@@ -59,4 +78,37 @@ function create_slug($string)
     $string = preg_replace('/(-)+/', '-', $string);
     $string = strtolower($string);
     return $string;
+}
+
+function insertTag($arrTags, $idPost)
+{
+    $db = new DB();
+
+    foreach ($arrTags as $item) {
+        //Kiểm tra tags đã tồn tại trong csdl chưa
+        if ($item != '') {
+            if (!checkExitsTag($item)) {
+                $sql = "INSERT INTO b_tags VALUES(null,'$item')";
+                $db->handleSQL($sql);
+            }
+            $get_tag = $db->getOneRowWithSQL("SELECT * FROM b_tags WHERE title = '$item'"); //lấy dòng vừa mới insert
+            $tag_id = $get_tag['id_tag']; //lấy id vừa mới insert
+            $sql = "INSERT INTO b_tag_of_post VALUE(null,$idPost,$tag_id)";
+            $db->handleSQL($sql);
+        }
+    }
+}
+
+
+function checkExitsTag($item)
+{
+    $db = new DB();
+    return $db->checkExistsRow("SELECT title FROM b_tags WHERE title = '$item'");
+}
+
+
+function checkExitsCate($item)
+{
+    $db = new DB();
+    return $db->checkExistsRow("SELECT title FROM b_categories WHERE title = '$item'");
 }

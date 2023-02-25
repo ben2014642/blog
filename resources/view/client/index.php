@@ -10,7 +10,7 @@ $body = [
 // Xử lý phân trang
 $sql = "SELECT COUNT(*) as total FROM b_post";
 $total_row = $db->getCountRow($sql);
-$limit = 5;
+$limit = 6;
 $current_page = $_GET['page'] ?? 1;
 $total_page = ceil($total_row / $limit);
 if ($current_page > $total_page) {
@@ -44,7 +44,7 @@ require_once(__DIR__ . '/hot_topic.php');
                     foreach ($blogs as $blog) {
                         echo '<div class="col-md-6">
                   <a href="/blog/'. $blog['slug'] . '" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                    <img src="' . $blog['image'] . '" alt="Image placeholder">
+                    <img src="' . $blog['thumbnail'] . '" alt="Image placeholder">
                     <div class="blog-content-body">
                       <div class="post-meta">
                         <span class="author mr-2"><img src="' . $helper->base_url('public/images/person_1.jpg') . '" alt="Bền Bò"> Bền Bò</span>&bullet;
@@ -74,7 +74,7 @@ require_once(__DIR__ . '/hot_topic.php');
                                 <?php
                                 if ($current_page > 1) {
                                     $prev = $current_page - 1;
-                                    echo '<li class="page-item "><a class="page-link" href="index.php?page=' . $prev . '">&lt;</a></li>';
+                                    echo '<li class="page-item "><a class="page-link" href="/page/' . $prev . '">&lt;</a></li>';
                                 }
                                 for ($i = 1; $i <= $total_page; $i++) {
 
@@ -82,7 +82,7 @@ require_once(__DIR__ . '/hot_topic.php');
                                     if ($active == 'active') {
                                         echo '<li class="page-item ' . $active . '"><a class="page-link" href="#">' . $i . '</a></li>';
                                     } else {
-                                        echo '<li class="page-item ' . $active . '"><a class="page-link" href="index.php?page=' . $i . '">' . $i . '</a></li>';
+                                        echo '<li class="page-item ' . $active . '"><a class="page-link" href="/page/' . $i . '">' . $i . '</a></li>';
                                     }
                                     if ($total_page >= 12) {
                                         if ($i == ($current_page + 5)) {
@@ -94,7 +94,7 @@ require_once(__DIR__ . '/hot_topic.php');
                                 }
                                 if ($current_page < $total_page) {
                                     $next = $current_page + 1;
-                                    echo '<li class="page-item"><a class="page-link" href="index.php?page=' . $next . '">&gt;</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="/page/' . $next . '">&gt;</a></li>';
                                 }
                                 ?>
 

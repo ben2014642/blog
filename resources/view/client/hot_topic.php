@@ -9,7 +9,7 @@
 
                     foreach ($hotPosts as $hot) {
                         echo '<div>
-                        <a href="blog-single.html" class="a-block d-flex align-items-center height-lg" style="background-image: url(' . $hot['image'] . '); ">
+                        <a href="blog-single.html" class="a-block d-flex align-items-center height-lg" style="background-image: url(' . $hot['thumbnail'] . '); ">
                           <div class="text half-to-full">
                             <span class="category mb-5">Food</span>
                             <div class="post-meta">

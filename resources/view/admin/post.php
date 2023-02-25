@@ -1,4 +1,7 @@
 <?php
+$body = [
+    'title' => 'Danh Sách Các Bài Viết'
+];
 require_once(__DIR__ . '/header.php');
 $sql = "SELECT * FROM b_post";
 // $help = new Helper();
@@ -36,7 +39,7 @@ $posts = $db->getList($sql);
                                 echo '
                                         <tr>
                                             <td>' . $post['title'] . '</td>
-                                            <td><img src="' . $post['image'] . '" style="width: 50px"></td>
+                                            <td><img src="' . $post['thumbnail'] . '" style="width: 50px"></td>
                                             <td>' . $post['status'] . '</td>
                                             <td>
                                             <div>

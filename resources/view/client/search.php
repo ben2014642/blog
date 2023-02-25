@@ -2,7 +2,7 @@
 $body = [
     'title' => 'Tìm Kiếm Bài Viết'
 ];
-$keyword = $_POST['key'] ?? '';
+$keyword = $_GET['key'] ?? '';
 
 
 // Xử lý phân trang
@@ -10,13 +10,16 @@ $sql = "SELECT COUNT(*) as total FROM b_post WHERE `slug` LIKE '%$keyword%'";
 $total_row = $db->getCountRow($sql);
 $limit = 5;
 $current_page = $_GET['page'] ?? 1;
+
 $total_page = ceil($total_row / $limit);
+
+$start = ($current_page - 1) * $limit;
+
 if ($current_page > $total_page) {
     $current_page = $total_page;
 } else if ($current_page < 1) {
     $current_page = 1;
 }
-$start = ($current_page - 1) * $limit;
 $sql = "SELECT * FROM b_post WHERE `slug` LIKE '%$keyword%' LIMIT $start,$limit";
 $blogs = $db->getList($sql);
 
@@ -40,9 +43,10 @@ require_once(__DIR__ . '/hot_topic.php');
                 <div class="row">
                     <?php
                     foreach ($blogs as $blog) {
+                        // print_r($blog); die();
                         echo '<div class="col-md-6">
                   <a href="/blog/' . $blog['slug'] . '" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                    <img src="' . $blog['image'] . '" alt="Image placeholder">
+                    <img src="' . $blog['thumbnail'] . '" alt="Image placeholder">
                     <div class="blog-content-body">
                       <div class="post-meta">
                         <span class="author mr-2"><img src="' . $helper->base_url('public/images/person_1.jpg') . '" alt="Bền Bò"> Bền Bò</span>&bullet;

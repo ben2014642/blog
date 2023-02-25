@@ -1,9 +1,13 @@
 <?php
+$body = [
+    'title' => 'Chỉnh sửa bài viết'
+];
 require_once(__DIR__ . '/header.php');
 if (isset($_GET['id'])) {
     $idPost = $_GET['id'];
     // $sql = "SELECT * FROM b_post WHERE id= $idPost";
     $data = $db->getOneRow('b_post', $idPost);
+    $category = $helper->getCategorysByIdPost($idPost);
 }
 ?>
 <div class="content-page">
@@ -26,12 +30,29 @@ if (isset($_GET['id'])) {
                             <label for="title" class="form-label">Chủ đề:</label>
                             <input type="text" value="<?= $data['title'] ?>" id="title" name="title" class="form-control">
                             <input type="text" value="update" id="title" name="type" hidden class="form-control">
-                            <input type="text" value="<?= $data['id'] ?>" id="title" name="idPost" hidden class="form-control">
+                            <input type="text" value="<?= $data['id'] ?>" id="idPost" name="idPost" hidden class="form-control">
                         </div>
-
+                        <div class="row col-12">
+                            <div class="col-6 mb-3">
+                                <label for="thumbnail" class="form-label">Thumbnail:</label>
+                                <input type="text" id="thumbnail" value="<?=$data['thumbnail']?>" name="thumbnail" class="form-control">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="category" class="form-label">Category:</label>
+                                <select type="text" id="category" name="category" class="form-control">
+                                    <?php
+                                        foreach ($category as $item) {
+                                            echo '
+                                                <option selected value="'.$item['title'].'">'.$item['title'].'</option>
+                                            ';
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="tags" class="form-label">Tags:</label>
-                            <select type="text" id="tags" name="tags" class="form-control" >
+                            <select type="text" id="tags" name="tags" class="form-control">
                                 <!-- <option value="1">123</option> -->
                                 <!-- <option selected value="2">234</option>
                                 <option selected value="2">234</option>
@@ -99,10 +120,18 @@ require_once(__DIR__ . '/footer.php');
     $(document).ready(function() {
         $('#form-submit-edit').submit(function(event) {
             event.preventDefault(); // <- avoid reloading
+            var tags = $('#tags').select2('data');
+            let a = '';
+            tags.forEach(tag => {
+                a += tag.text + ",";
+            });
+            var categories = $("#category").val();
+            tinyMCE.triggerSave();
+
             $.ajax({
                 type: "POST",
                 url: "<?= $helper->base_url('ajax/HandleEditPost.php') ?>",
-                data: $(this).serialize(),
+                data: $(this).serialize() + "&tags=" + a + "&category="+categories,
                 dataType: "json",
                 success: function(response) {
                     console.log(response);
@@ -111,7 +140,7 @@ require_once(__DIR__ . '/footer.php');
                     } else {
                         alert("Đã xảy ra lỗi !!!");
                     }
-                    window.location.reload();
+                    // window.location.reload();
                 },
                 error: function(error) {
                     console.log(error);
@@ -138,7 +167,7 @@ require_once(__DIR__ . '/footer.php');
                         results: $.map(data, function(item) {
                             return {
                                 text: item.title,
-                                id: item.id
+                                id: item.id_tag
                             }
                         })
                     }
@@ -146,7 +175,45 @@ require_once(__DIR__ . '/footer.php');
 
             }
         });
-        
-    });
+        $('#category').select2({
+            tags: true,
+            ajax: {
+                url: "<?= $helper->base_url('ajax/getCategories.php') ?>",
+                data: function(params) {
+                    var queryParam = {
+                        q: params.term
+                    }
 
+                    return queryParam;
+                },
+                dataType: "json",
+                processResults: function(data) {
+                    console.log(data);
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.title,
+                                id: item.id_cate
+                            }
+                        })
+                    }
+                }
+
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: "<?= $helper->base_url('ajax/getTags.php') ?>",
+            data: {
+                post_id: <?= $idPost ?>
+            },
+            dataType: "json",
+            success: function(response) {
+                console.log(response);
+                $.each(response, function(index, tag) {
+                    $("#tags").append(`<option selected value='${tag.title}'>${tag.title}</option>`)
+                });
+            }
+        });
+    });
 </script>

@@ -1,4 +1,7 @@
 <?php
+$body = [
+    'title' => 'Tạo bài viết mới'
+];
 require_once(__DIR__ . '/header.php');
 ?>
 <div class="content-page">
@@ -20,9 +23,18 @@ require_once(__DIR__ . '/header.php');
                         <div class="mb-3">
                             <label for="title" class="form-label">Chủ đề:</label>
                             <input type="text" id="title" name="title" class="form-control">
-                            <input type="text" id="title" name="action" value="createPost" hidden class="form-control">
                         </div>
-
+                        <div class="row col-12">
+                            <div class="col-6 mb-3">
+                                <label for="thumbnail" class="form-label">Thumbnail:</label>
+                                <input type="text" id="thumbnail" name="thumbnail" class="form-control">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="category" class="form-label">Category:</label>
+                                <select type="text" id="category" name="category" class="form-control">
+                                </select>
+                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="tags" class="form-label">Tags:</label>
                             <select name="tags" class="form-control" id="tags"></select>
@@ -38,7 +50,7 @@ require_once(__DIR__ . '/header.php');
 
                         <div class="mb-3">
                             <label for="example-textarea" class="form-label">Text area</label>
-                            <textarea class="form-control" name="content" id="create" rows="10"></textarea>
+                            <textarea class="form-control" name="content" id="content" rows="10"></textarea>
                         </div>
                         <button class="btn btn-info">Tạo Bài Viết</button>
                 </div>
@@ -69,12 +81,38 @@ require_once(__DIR__ . '/footer.php');
                 },
                 dataType: "json",
                 processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                text: item.title,
+                                id: item.id_tag
+                            }
+                        })
+                    }
+                }
+
+            }
+        });
+
+        $('#category').select2({
+            tags: true,
+            ajax: {
+                url: "<?= $helper->base_url('ajax/getCategories.php') ?>",
+                data: function(params) {
+                    var queryParam = {
+                        q: params.term
+                    }
+
+                    return queryParam;
+                },
+                dataType: "json",
+                processResults: function(data) {
                     console.log(data);
                     return {
                         results: $.map(data, function(item) {
                             return {
                                 text: item.title,
-                                id: item.id
+                                id: item.id_cate
                             }
                         })
                     }
@@ -85,8 +123,9 @@ require_once(__DIR__ . '/footer.php');
     });
 </script>
 <script>
+    console.log('123');
     tinymce.init({
-        selector: 'textarea#create',
+        selector: 'textarea#content',
         height: 500,
         plugins: [
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
@@ -100,36 +139,22 @@ require_once(__DIR__ . '/footer.php');
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
     });
 </script>
-<!-- <script src="https://cdn.ckeditor.com/ckeditor5/35.3.1/classic/ckeditor.js"></script>
-<script src="plugin/ckfinder/ckfinder.js"></script> -->
-<!-- <script>
-    ClassicEditor
-        .create(document.querySelector('#editor'), {
-            ckfinder: {
-                uploadUrl: 'plugin/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json'
-            }
-        })
-        .then(editor => {
-            console.log(editor);
-        })
-        .catch(editor => {
-            console.log(editor);
-        });
-</script> -->
+
 <script>
     $("#form-create-post").submit(function(e) {
         e.preventDefault();
+        console.log($("#content").val());
         var tags = $('#tags').select2('data');
+        var categories = $("#category").val();
         let a = '';
         tags.forEach(tag => {
             a += tag.text + ",";
         });
-        // console.log(a);
-        // return;
+        tinyMCE.triggerSave();
         $.ajax({
             type: "POST",
             url: "<?= $helper->base_url('ajax/process.php') ?>",
-            data: $(this).serialize() + "&action=createPost&tags=" + a,
+            data: $(this).serialize() + "&action=createPost&tags=" + a + "&category="+categories,
             dataType: "json",
             success: function(response) {
                 console.log(response);
@@ -138,7 +163,7 @@ require_once(__DIR__ . '/footer.php');
                 } else {
                     alert("Đã xảy ra lỗi !!!");
                 }
-                window.location.reload();
+                // window.location.reload();
             },
             error: function(error) {
                 console.log(error);

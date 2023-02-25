@@ -6,7 +6,7 @@ $helper = new Helper();
 
 if (isset($_GET['q'])) {
     $q = $_GET['q'] ?? '';
-    $sql = "SELECT * FROM b_tags WHERE title LIKE '%$q%'";
+    $sql = "SELECT * FROM b_categories WHERE title LIKE '%$q%'";
     $tags = $db->getList($sql);
 
     die(json_encode($tags));

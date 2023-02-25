@@ -12,6 +12,7 @@ if (isset($_GET['slug'])) {
     $sql = "SELECT * FROM b_comment cmt JOIN b_user u ON cmt.user_id = u.id WHERE cmt.post_id = $post_id";
     $comments = $db->getList($sql);
     $total = $db->getCountOfTable('b_comment', 'post_id = ' . $post_id . '');
+
 }
 
 // return;
@@ -30,7 +31,7 @@ if (isset($_GET['slug'])) {
             <div class="row blog-entries element-animate">
 
                 <div class="col-md-12 col-lg-8 main-content">
-                    <img src="<?= $data['image'] ?>" alt="Image" class="img-fluid mb-5">
+                    <img src="<?= $data['thumbnail'] ?>" alt="Image" class="img-fluid mb-5">
                     <div class="post-meta">
                         <span class="author mr-2"><img src="<?= $helper->base_url('public/images/person_1.jpg') ?>" alt="Colorlib" class="mr-2"> Colorlib</span>&bullet;
                         <span class="mr-2"><?= $data['updated_time'] ?></span> &bullet;
@@ -44,7 +45,7 @@ if (isset($_GET['slug'])) {
 
 
                     <div class="pt-5">
-                        <p>Categories:
+                        <p>Categories 123:
                             <?= $categories ?>
                         </p>
                     </div>
@@ -55,10 +56,11 @@ if (isset($_GET['slug'])) {
                         <ul class="comment-list">
                             <?php
                             foreach ($comments as $item) {
+                                $avatar = $item['image'] ?? 'https://www.croptecshow.com/wp-content/uploads/2017/04/guest-avatar-250x250px.png';
                                 echo '
                                     <li class="comment">
                                         <div class="vcard">
-                                            <img src="images/person_1.jpg" alt="Image placeholder">
+                                            <img src="'.$avatar.'" alt="Image placeholder">
                                         </div>
                                         <div class="comment-body">
                                             <h3>' . $item['username'] . '</h3>
@@ -69,73 +71,6 @@ if (isset($_GET['slug'])) {
                                     </li>';
                             }
                             ?>
-
-                            <!-- <li class="comment">
-                                <div class="vcard">
-                                    <img src="images/person_1.jpg" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                    <h3>Jean Doe</h3>
-                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                </div>
-
-                                <ul class="children">
-                                    <li class="comment">
-                                        <div class="vcard">
-                                            <img src="images/person_1.jpg" alt="Image placeholder">
-                                        </div>
-                                        <div class="comment-body">
-                                            <h3>Jean Doe</h3>
-                                            <div class="meta">January 9, 2018 at 2:21pm</div>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                            <p><a href="#" class="reply rounded">Reply</a></p>
-                                        </div>
-
-
-                                        <ul class="children">
-                                            <li class="comment">
-                                                <div class="vcard">
-                                                    <img src="images/person_1.jpg" alt="Image placeholder">
-                                                </div>
-                                                <div class="comment-body">
-                                                    <h3>Jean Doe</h3>
-                                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                                </div>
-
-                                                <ul class="children">
-                                                    <li class="comment">
-                                                        <div class="vcard">
-                                                            <img src="images/person_1.jpg" alt="Image placeholder">
-                                                        </div>
-                                                        <div class="comment-body">
-                                                            <h3>Jean Doe</h3>
-                                                            <div class="meta">January 9, 2018 at 2:21pm</div>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                                            <p><a href="#" class="reply rounded">Reply</a></p>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="comment">
-                                <div class="vcard">
-                                    <img src="images/person_1.jpg" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                    <h3>Jean Doe</h3>
-                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                </div>
-                            </li> -->
                         </ul>
                         <!-- END comment-list -->
 
@@ -146,14 +81,6 @@ if (isset($_GET['slug'])) {
                                     <label for="name">Name *</label>
                                     <input type="text" class="form-control" disabled value="Khách" id="name">
                                 </div>
-                                <!-- <div class="form-group">
-                                    <label for="email">Email *</label>
-                                    <input type="email" class="form-control" id="email">
-                                </div> -->
-                                <!-- <div class="form-group">
-                                    <label for="website">Website</label>
-                                    <input type="url" class="form-control" id="website">
-                                </div> -->
 
                                 <div class="form-group">
                                     <label for="message">Message</label>

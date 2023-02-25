@@ -24,25 +24,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         case 'createPost':
             $title = trim($_POST['title']);
             $tags = trim($_POST['tags']);
+            $category = trim($_POST['category']);
+            $thumbnail = trim($_POST['thumbnail']);
             $status = trim($_POST['status']);
             $content = $_POST['content'];
             $created = $updated = date("Y-m-d H:i:s");
             $arrTags = explode(",", $_POST['tags']);
             $slug = create_slug($title);
-            $sql = "INSERT INTO b_post (title,content,tags,status,created_time,updated_time,author_id,hot,slug) VALUES('$title','$content','$tags',$status,'$created','$updated',1,0,'$slug')";
-            // print_r($_POST);
-            // echo $sql;
-            // echo $sql;
-            // die();
+
+            $sql = "INSERT INTO b_post (title,content,tags,status,created_time,updated_time,author_id,hot,slug,thumbnail) VALUES('$title','$content','$tags',$status,'$created','$updated',1,0,'$slug','$thumbnail')";
+            // die($sql);
             $db->handleSQL($sql);
-            $get_row_latest_post = $helper->getRowLatest('b_post');
-            $id_latest = $get_row_latest_post['id'];
+
+            $get_row_latest_post = $helper->getRowLatest('b_post'); //lấy dòng vừa mới insert
+            $post_id_latest = $get_row_latest_post['id']; //lấy id vừa mới insert
+
+
             foreach ($arrTags as $item) {
+                //Kiểm tra tags đã tồn tại trong csdl chưa
                 if ($item != '') {
-                    $sql = "INSERT INTO b_tag_of_post VALUE(null,'$item',$id_latest)";
+                    if (!checkExitsTag($item)) {
+                        $sql = "INSERT INTO b_tags VALUES(null,'$item')";
+                        $db->handleSQL($sql);
+                    }
+                    $get_tag = $db->getOneRowWithSQL("SELECT * FROM b_tags WHERE title = '$item'"); //lấy dòng vừa mới insert
+                    $tag_id = $get_tag['id_tag']; //lấy id vừa mới insert
+                    $sql = "INSERT INTO b_tag_of_post VALUE(null,$post_id_latest,$tag_id)";
                     $db->handleSQL($sql);
                 }
             }
+            if (!checkExitsCate($category)) {
+                $sql = "INSERT INTO b_categories VALUES(null,'$category')";
+                $db->handleSQL($sql);
+            }
+            $get_category = $db->getOneRowWithSQL("SELECT * FROM b_categories WHERE title = '$category'"); //lấy dòng vừa mới insert
+            $cate_id = $get_category['id_cate']; //lấy id vừa mới insert
+            $sql = "INSERT INTO b_cate_of_post VALUE(null,$cate_id,$post_id_latest)";
+            $db->handleSQL($sql);
             die(json_encode([
                 'status' => 'success',
                 'msg' => 'Tạo bài viết thành công !'
@@ -121,4 +139,15 @@ function create_slug($string)
     $string = preg_replace('/(-)+/', '-', $string);
     $string = strtolower($string);
     return $string;
+}
+
+function checkExitsTag($item)
+{
+    $db = new DB();
+    return $db->checkExistsRow("SELECT title FROM b_tags WHERE title = '$item'");
+}
+function checkExitsCate($item)
+{
+    $db = new DB();
+    return $db->checkExistsRow("SELECT title FROM b_categories WHERE title = '$item'");
 }
