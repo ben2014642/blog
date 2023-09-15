@@ -1,2 +1,2 @@
-# blog
-- Demo: https://blog.bendeptrai.com/
+# Demo
+https://blog.bendeptrai.com/
